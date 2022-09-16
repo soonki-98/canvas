@@ -4,6 +4,12 @@ type DrawerConstructorType = {
   backgroundColor?: string;
 };
 
+type ImageType = {
+  id: any;
+  position: { x: number; y: number; zIndex: number; width: number; height: number };
+  src: string;
+};
+
 class Drawer {
   private _width = 0;
   private _height = 0;
@@ -13,6 +19,9 @@ class Drawer {
   private _strokeStyle = "black";
   private _lineWidth = 1;
   private _backgroundColor = "#fff";
+  private _imgSrc = "";
+  private _zIndex = 0;
+  private _images: ImageType[] = [];
 
   private handleMouseDown?: () => void;
   private handleMouseUp?: () => void;
@@ -92,12 +101,39 @@ class Drawer {
     }
   }
 
+  private _addImage() {
+    if (this._ctx) {
+      const img = new Image();
+      img.src = this._imgSrc;
+      img.style.zIndex = this._zIndex.toString();
+      this._zIndex += 1;
+      this._images.push({
+        id: Number(img.style.zIndex),
+        position: { x: 10, y: 10, width: 100, height: 100, zIndex: Number(img.style.zIndex) },
+        src: img.src,
+      });
+      this._ctx.drawImage(img, 10, 10, 100, 100);
+    }
+  }
+
   set setStrokeStyle(color: string) {
     this._strokeStyle = color;
   }
 
   set setLineWidth(thick: number) {
     this._lineWidth = thick;
+  }
+
+  set setImageSrc(url: string) {
+    this._imgSrc = url;
+  }
+
+  get addImage() {
+    return this._addImage();
+  }
+
+  get getAllImages() {
+    return this._images;
   }
 }
 
