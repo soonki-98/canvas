@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 import Drawer from "../lib/app";
 interface IToolbarType {
@@ -31,6 +32,43 @@ const Toolbar = ({ editor }: IToolbarType) => {
         <li onClick={() => (editor.setLineWidth = 2)}>2</li>
         <li onClick={() => (editor.setLineWidth = 3)}>3</li>
         <li onClick={() => (editor.setLineWidth = 4)}>4</li>
+      </Tab>
+      <Tab className="eraser">
+        <li id="title">
+          <h1>ERASER</h1>
+        </li>
+        <li
+          onClick={() => {
+            editor.setLineWidth = 5;
+            editor.setStrokeStyle = "#fff";
+          }}
+        >
+          1
+        </li>
+        <li
+          onClick={() => {
+            editor.setLineWidth = 15;
+            editor.setStrokeStyle = "#fff";
+          }}
+        >
+          2
+        </li>
+        <li
+          onClick={() => {
+            editor.setLineWidth = 25;
+            editor.setStrokeStyle = "#fff";
+          }}
+        >
+          3
+        </li>
+        <li
+          onClick={() => {
+            editor.setLineWidth = 35;
+            editor.setStrokeStyle = "#fff";
+          }}
+        >
+          4
+        </li>
       </Tab>
     </Wrapper>
   );
