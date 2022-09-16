@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import styled from "styled-components";
-import Drawer from "../lib/app";
+import { Drawer } from "../lib";
 interface IToolbarType {
   editor: Drawer;
 }
