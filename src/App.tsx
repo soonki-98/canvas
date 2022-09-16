@@ -1,24 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Drawer from "./lib/app";
 
 function App() {
+  const editor = new Drawer({ width: 1000, height: 1000 });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul>
+        <li onClick={() => (editor.setStrokeStyle = "red")}>red</li>
+        <li onClick={() => (editor.setStrokeStyle = "blue")}>blue</li>
+        <li onClick={() => (editor.setStrokeStyle = "green")}>green</li>
+        <li onClick={() => (editor.setStrokeStyle = "black")}>black</li>
+      </ul>
+      <ul>
+        <li onClick={() => (editor.setLineWidth = 1)}>1</li>
+        <li onClick={() => (editor.setLineWidth = 2)}>2</li>
+        <li onClick={() => (editor.setLineWidth = 3)}>3</li>
+        <li onClick={() => (editor.setLineWidth = 4)}>4</li>
+      </ul>
     </div>
   );
 }
