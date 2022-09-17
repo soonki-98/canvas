@@ -134,7 +134,7 @@ class Drawer {
     if (this._ctx) {
       this._isMovingImage = true;
       const { offsetX, offsetY } = event;
-      const selectedList = this._images.map((image) => {
+      const selectedList = this._images.filter((image) => {
         if (
           offsetX <= image.position.x + image.position.width &&
           offsetX >= image.position.x &&
@@ -144,6 +144,7 @@ class Drawer {
           return image;
         }
       });
+      this._readyToPaint = false;
       this._selectedImage = selectedList[selectedList.length - 1];
     }
   }
