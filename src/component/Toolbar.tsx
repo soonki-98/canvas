@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import styled from "styled-components";
 import { Drawer } from "../lib";
+import IU from "../lib/아이유.jpeg";
 interface IToolbarType {
   editor: Drawer;
 }
@@ -11,16 +12,40 @@ const Toolbar = ({ editor }: IToolbarType) => {
         <li id="title">
           <h1>COLOR</h1>
         </li>
-        <li style={{ background: "red" }} onClick={() => (editor.setStrokeStyle = "red")}>
+        <li
+          style={{ background: "red" }}
+          onClick={() => {
+            editor.setStrokeStyle("red");
+            editor.readyToPaint(true);
+          }}
+        >
           red
         </li>
-        <li style={{ background: "blue", color: "#fff" }} onClick={() => (editor.setStrokeStyle = "blue")}>
+        <li
+          style={{ background: "blue", color: "#fff" }}
+          onClick={() => {
+            editor.setStrokeStyle("blue");
+            editor.readyToPaint(true);
+          }}
+        >
           blue
         </li>
-        <li style={{ background: "green" }} onClick={() => (editor.setStrokeStyle = "green")}>
+        <li
+          style={{ background: "green" }}
+          onClick={() => {
+            editor.setStrokeStyle("green");
+            editor.readyToPaint(true);
+          }}
+        >
           green
         </li>
-        <li style={{ background: "black", color: "#fff" }} onClick={() => (editor.setStrokeStyle = "black")}>
+        <li
+          style={{ background: "black", color: "#fff" }}
+          onClick={() => {
+            editor.setStrokeStyle("black");
+            editor.readyToPaint(true);
+          }}
+        >
           black
         </li>
       </Tab>
@@ -28,10 +53,38 @@ const Toolbar = ({ editor }: IToolbarType) => {
         <li id="title">
           <h1>THICK</h1>
         </li>
-        <li onClick={() => (editor.setLineWidth = 1)}>1</li>
-        <li onClick={() => (editor.setLineWidth = 2)}>2</li>
-        <li onClick={() => (editor.setLineWidth = 3)}>3</li>
-        <li onClick={() => (editor.setLineWidth = 4)}>4</li>
+        <li
+          onClick={() => {
+            editor.setLineWidth(1);
+            editor.readyToPaint(true);
+          }}
+        >
+          1
+        </li>
+        <li
+          onClick={() => {
+            editor.setLineWidth(2);
+            editor.readyToPaint(true);
+          }}
+        >
+          2
+        </li>
+        <li
+          onClick={() => {
+            editor.setLineWidth(3);
+            editor.readyToPaint(true);
+          }}
+        >
+          3
+        </li>
+        <li
+          onClick={() => {
+            editor.setLineWidth(4);
+            editor.readyToPaint(true);
+          }}
+        >
+          4
+        </li>
       </Tab>
       <Tab className="eraser">
         <li id="title">
@@ -39,32 +92,36 @@ const Toolbar = ({ editor }: IToolbarType) => {
         </li>
         <li
           onClick={() => {
-            editor.setLineWidth = 5;
-            editor.setStrokeStyle = "#fff";
+            editor.setLineWidth(5);
+            editor.setStrokeStyle("#fff");
+            editor.readyToPaint(true);
           }}
         >
           1
         </li>
         <li
           onClick={() => {
-            editor.setLineWidth = 15;
-            editor.setStrokeStyle = "#fff";
+            editor.setLineWidth(15);
+            editor.setStrokeStyle("#fff");
+            editor.readyToPaint(true);
           }}
         >
           2
         </li>
         <li
           onClick={() => {
-            editor.setLineWidth = 25;
-            editor.setStrokeStyle = "#fff";
+            editor.setLineWidth(25);
+            editor.setStrokeStyle("#fff");
+            editor.readyToPaint(true);
           }}
         >
           3
         </li>
         <li
           onClick={() => {
-            editor.setLineWidth = 35;
-            editor.setStrokeStyle = "#fff";
+            editor.setLineWidth(35);
+            editor.setStrokeStyle("#fff");
+            editor.readyToPaint(true);
           }}
         >
           4
@@ -75,14 +132,20 @@ const Toolbar = ({ editor }: IToolbarType) => {
           <h1>IMAGE</h1>
         </li>
         <li
-          onClick={() =>
-            (editor.setImageSrc =
-              "https://cdnimg.melon.co.kr/cm2/artistcrop/images/002/61/143/261143_20210325180240_500.jpg?61e575e8653e5920470a38d1482d7312/melon/optimize/90")
-          }
+          onClick={() => {
+            editor.setImageSrc(IU);
+          }}
         >
           아이유
         </li>
-        <li onClick={() => editor.addImage}>add</li>
+        <li
+          onClick={() => {
+            editor.readyToPaint(false);
+            editor.addImage();
+          }}
+        >
+          add
+        </li>
         <li onClick={() => console.log(editor.getAllImages)}>console</li>
       </Tab>
     </Wrapper>

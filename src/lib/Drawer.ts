@@ -8,12 +8,14 @@ type ImageType = {
   id: any;
   position: { x: number; y: number; zIndex: number; width: number; height: number };
   src: string;
+  data: HTMLImageElement;
 };
 
 class Drawer {
   private _width = 0;
   private _height = 0;
   private _isPainting = false;
+  private _isReadyToPaint = true;
   private _canvas?: HTMLCanvasElement;
   private _ctx?: CanvasRenderingContext2D | null = null;
   private _strokeStyle = "black";
@@ -22,20 +24,22 @@ class Drawer {
   private _imgSrc = "";
   private _zIndex = 0;
   private _images: ImageType[] = [];
+  private _selectedImage?: ImageType;
+  private _isMovingImage = false;
 
-  private handleMouseDown?: () => void;
+  private handleMouseDown?: (event: MouseEvent) => void;
   private handleMouseUp?: () => void;
   private handleMouseMove?: (event: MouseEvent) => void;
   private handleMouseLeave?: () => void;
+  private handleClick?: (event: MouseEvent) => void;
 
   constructor(props: DrawerConstructorType) {
     this._width = props.width;
     this._height = props.height;
     this._backgroundColor = props.backgroundColor || "#fff";
-    this.init();
   }
 
-  private init() {
+  public init() {
     this.createCanvas();
     this.setEvents();
   }
@@ -67,6 +71,7 @@ class Drawer {
 
   private drawing(event: MouseEvent) {
     if (!this._canvas || !this._ctx) return;
+
     const { offsetX, offsetY } = event;
     if (this._isPainting) {
       this._ctx.lineTo(offsetX, offsetY);
@@ -79,16 +84,23 @@ class Drawer {
 
   private setEvents() {
     this.clearEvents();
-    this.handleMouseDown = this.startPainting.bind(this);
-    this.handleMouseLeave = this.stopPainting.bind(this);
-    this.handleMouseMove = this.drawing.bind(this);
-    this.handleMouseUp = this.stopPainting.bind(this);
-
+    if (this._isReadyToPaint) {
+      this.handleMouseMove = this.drawing.bind(this);
+      this.handleMouseDown = this.startPainting.bind(this);
+      this.handleMouseLeave = this.stopPainting.bind(this);
+      this.handleMouseUp = this.stopPainting.bind(this);
+    } else {
+      this.handleMouseDown = this.startMoveImage.bind(this);
+      this.handleMouseMove = this.moveImage.bind(this);
+      this.handleMouseUp = this.stopMovingImage.bind(this);
+      this.handleMouseLeave = this.stopMovingImage.bind(this);
+    }
     if (this._canvas) {
       this.handleMouseDown && this._canvas.addEventListener("mousedown", this.handleMouseDown);
       this.handleMouseLeave && this._canvas.addEventListener("mouseleave", this.handleMouseLeave);
       this.handleMouseMove && this._canvas.addEventListener("mousemove", this.handleMouseMove);
       this.handleMouseUp && this._canvas.addEventListener("mouseup", this.handleMouseUp);
+      this.handleClick && this._canvas.addEventListener("click", this.handleClick);
     }
   }
 
@@ -98,6 +110,7 @@ class Drawer {
       this.handleMouseLeave && this._canvas.removeEventListener("mouseleave", this.handleMouseLeave);
       this.handleMouseMove && this._canvas.removeEventListener("mousemove", this.handleMouseMove);
       this.handleMouseUp && this._canvas.removeEventListener("mouseup", this.handleMouseUp);
+      this.handleClick && this._canvas.removeEventListener("click", this.handleClick);
     }
   }
 
@@ -111,24 +124,83 @@ class Drawer {
         id: Number(img.style.zIndex),
         position: { x: 10, y: 10, width: 100, height: 100, zIndex: Number(img.style.zIndex) },
         src: img.src,
+        data: img,
       });
       this._ctx.drawImage(img, 10, 10, 100, 100);
     }
   }
 
-  set setStrokeStyle(color: string) {
+  private startMoveImage(event: MouseEvent) {
+    if (this._ctx) {
+      this._isMovingImage = true;
+      const { offsetX, offsetY } = event;
+      const selectedList = this._images.map((image) => {
+        if (
+          offsetX <= image.position.x + image.position.width &&
+          offsetX >= image.position.x &&
+          offsetY <= image.position.y + image.position.width &&
+          offsetY >= image.position.y
+        ) {
+          return image;
+        }
+      });
+      this._selectedImage = selectedList[selectedList.length - 1];
+    }
+  }
+
+  private stopMovingImage() {
+    this._isMovingImage = false;
+  }
+
+  private moveImage(event: MouseEvent) {
+    if (!this._canvas || !this._ctx || !this._selectedImage || !this._isMovingImage) return;
+    const { offsetX, offsetY } = event;
+
+    this._ctx.clearRect(
+      this._selectedImage.position.x,
+      this._selectedImage.position.y,
+      this._selectedImage.position.width,
+      this._selectedImage.position.height
+    );
+    this._selectedImage.position.x = offsetX;
+    this._selectedImage.position.y = offsetY;
+    this._ctx.drawImage(this._selectedImage.data, offsetX, offsetY, 100, 100);
+  }
+
+  set _setStrokeStyle(color: string) {
     this._strokeStyle = color;
   }
 
-  set setLineWidth(thick: number) {
+  public setStrokeStyle(color: string) {
+    this._setStrokeStyle = color;
+  }
+
+  set _setLineWidth(thick: number) {
     this._lineWidth = thick;
   }
 
-  set setImageSrc(url: string) {
+  public setLineWidth(thick: number) {
+    this._setLineWidth = thick;
+  }
+
+  set _setImageSrc(url: string) {
     this._imgSrc = url;
   }
 
-  get addImage() {
+  public setImageSrc(url: string) {
+    this._setImageSrc = url;
+  }
+
+  set _readyToPaint(flag: boolean) {
+    this._isReadyToPaint = flag;
+    this.setEvents();
+  }
+
+  public readyToPaint(flag: boolean) {
+    this._readyToPaint = flag;
+  }
+
+  public addImage() {
     return this._addImage();
   }
 

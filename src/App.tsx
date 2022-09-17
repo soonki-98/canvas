@@ -5,6 +5,7 @@ import { Drawer } from "./lib";
 
 function App() {
   const editor = new Drawer({ width: 1280, height: 720 });
+  editor.init();
 
   return (
     <div className="App">
